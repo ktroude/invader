@@ -39,7 +39,7 @@
 
 .invader {
     position: absolute;
-    width: 5vw;
+    width: 50px;
     height: auto;
     top: 0;
     left: 0;
@@ -47,23 +47,3 @@
     opacity: 0;
     transition: transform 5s linear, opacity 1s ease-in-out;
 }
-
-.missile {
-    position: absolute;
-    width: 50px;
-    height: 20px;
-    background-color: black;
-    transition: transform 5s linear; /* Transition longue pour un mouvement lent */
-    z-index: 100;
-  }
-  
-.explosion {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    opacity: 0;
-    transition: opacity 1s ease-out;
-    z-index: 100;
-  }
-  

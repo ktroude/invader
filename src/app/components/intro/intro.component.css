@@ -1,0 +1,16 @@
+
+
+@font-face {
+    font-family: 'Minimo';
+    src: url('/font/Ahmet-Altun-Minimo-Regular_0.otf') format('opentype');
+}
+
+
+.prez{
+    font: normal normal normal 40px/42px Minimo;
+}
+
+.intro_container {
+    width: 100%;
+    text-align: center;
+}

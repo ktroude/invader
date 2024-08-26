@@ -84,8 +84,8 @@ export class HeaderComponent implements OnInit {
     const headerRect = headerContainer.getBoundingClientRect();
 
     missile.style.position = 'absolute';
-    missile.style.width = '0.5vw';
-    missile.style.height = '2vh';
+    missile.style.width = '5px';
+    missile.style.height = '20px';
     missile.style.backgroundColor = 'black';
 
     // Position the missile just below the invader
@@ -112,7 +112,7 @@ export class HeaderComponent implements OnInit {
     const distanceToBottom = containerRect.bottom - missileRect.bottom;
 
     // Adjust the transition duration based on the distance
-    const duration = distanceToBottom / 1000 * 5; // 5 seconds to descend completely
+    const duration = distanceToBottom / 1000 * 2; // 5 seconds to descend completely
     missile.style.transition = `transform ${duration}s linear`;
     missile.style.transform = `translateY(${distanceToBottom}px)`;
 
