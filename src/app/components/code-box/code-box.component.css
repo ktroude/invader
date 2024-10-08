@@ -7,8 +7,7 @@
 
 .black_box {
     width: calc(70% - 27px);
-    min-width: 300px;
-    height: 44vh;
+    height: 35vh;
     background-color: black;
     color: white;
     display: flex;
@@ -26,11 +25,6 @@
 }
 
 @media screen and (max-width: 1024px) {
-    .abilities-container {
-        flex-direction: column;
-        width: 100%;
-        padding-right: 0;
-    }
 
     .black_box {
         width: 90%;
@@ -40,8 +34,8 @@
 @media screen and (max-width: 768px) {
 
     .black_box {
-        width: 95%;
-        margin: 0 16px;
+        width: 85%;
+        /* margin: 0 16px; */
     }
 
     .initial_code_text {

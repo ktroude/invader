@@ -5,11 +5,13 @@ import { IntroComponent } from './components/intro/intro.component';
 import { CodeBoxComponent } from './components/code-box/code-box.component';
 import { ChoiceBoxComponent } from "./components/choice-box/choice-box.component";
 import { AbilitiesComponent } from "./components/abilities/abilities.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
+    CommonModule,
     RouterOutlet,
     HeaderComponent,
     IntroComponent,

@@ -82,7 +82,6 @@
 @media screen and (max-width: 768px) {
     .first, .second, .third {
         width: 90%;
-        gap: 20px;
     }
 
     .abilities-text {
