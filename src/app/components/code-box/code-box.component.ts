@@ -10,7 +10,6 @@ import { Component } from '@angular/core';
 })
 export class CodeBoxComponent {
 
-  // The complete code that will be displayed and typed by the user.
   fullCode: string = `
 function animateInvaders() : void {
   const invaders = document.querySelectorAll('.invader');
@@ -22,11 +21,14 @@ function animateInvaders() : void {
       this.shoot(invader as HTMLElement);
     }, randomSpeed);
   });
-}`.replace(/\n/g, '<br>');
+}`;
 
   displayedCode: string = '';  // The code currently displayed to the user.
-  userCode: string = '';        // The code currently typed by the user.
+  userCode: string = '';       // The code currently typed by the user.
   increment: number = 4;       // Number of characters to display on each key press.
+  caretVisible: boolean = true;  // To toggle the caret visibility.
+  isTextClicked: boolean = false; // To track if the div is clicked.
+  progress: number = 0;        // Store the progress percentage
 
   /**
    * Handles the keydown event.
@@ -34,6 +36,8 @@ function animateInvaders() : void {
    * @param event The keyboard event containing information about the key pressed.
    */
   onKeydown(event: KeyboardEvent) {
+    this.isTextClicked = true;  // The user has started interacting, hide the placeholder text.
+
     // Check that the user has not exceeded the length of fullCode.
     if (this.displayedCode.length < this.fullCode.length) {
       // Display the characters based on the increment.
@@ -49,10 +53,21 @@ function animateInvaders() : void {
       this.displayedCode = this.fullCode.slice(0, this.userCode.length);
     }
 
+    // Update the progress percentage
+    this.progress = Math.min((this.userCode.length / this.fullCode.length) * 100 * 4, 100);
+
     // Detect if the user has finished typing.
     if (this.displayedCode.length === this.fullCode.length) {
       this.endTypingAnimation();
     }
+  }
+
+  /**
+   * Returns the rounded progress percentage.
+   * @returns The rounded progress percentage.
+   */
+  getRoundedProgress() {
+    return Math.round(this.progress);
   }
 
   /**
@@ -128,4 +143,12 @@ function animateInvaders() : void {
     invader.style.transition = `transform ${Math.random() * 1 + 0.8}s linear`; // Transition with a random duration.
     invader.style.transform = `translate(${randomX}px, ${randomY}px)`;
   }
+
+  /**
+   * Toggles the caret visibility to create the blinking effect.
+   */
+  toggleCaretVisibility() {
+    this.caretVisible = !this.caretVisible;
+  }
+
 }

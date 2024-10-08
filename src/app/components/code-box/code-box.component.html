@@ -1,17 +1,33 @@
-
-
-<div class="code_container" tabindex="0" (keydown)="onKeydown($event)">
+<div class="code_container" tabindex="0" (keydown)="onKeydown($event)" (click)="isTextClicked = true">
     <div class="black_box">
-        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
-        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
-        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
-        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
-        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
-        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
-            <span class="initial_code_text" *ngIf="userCode.length === 0">Let's work together. <br> Write anything <span class="highlight">in here</span> !</span>
-
-            <p class="user_code" *ngIf="userCode.length > 0" [innerHTML]="displayedCode">
-
-
+      <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+      <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+      <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+      <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+      <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+      <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+  
+      <!-- Placeholder text, disappears after the first click -->
+      <span class="initial_code_text" *ngIf="!isTextClicked">
+        Let's work together. <br> Write anything 
+        <span class="highlight">in here</span> !
+        <span class="highlight" *ngIf="!isTextClicked && (userCode.length * 4 < fullCode.length)" [class.blink]="caretVisible">|</span>
+      </span>
+  
+      <!-- The user_code will appear once the user starts typing -->
+      <p class="user_code" *ngIf="userCode.length >= 0">
+        {{ displayedCode }}
+        <span *ngIf="isTextClicked && (userCode.length * 4 < fullCode.length)" [class.blink]="caretVisible" class="caret">|</span>
+      </p>
+  
+      <!-- Progress Bar -->
+        <div *ngIf="isTextClicked"   class="progress-bar-container">
+            <div class="progress-bar-fill" [style.width.%]="progress"></div>
+            <p class="caret">
+                {{ getRoundedProgress() }}%
+            </p>
+        </div>
+  
     </div>
-</div>
+  </div>
+  

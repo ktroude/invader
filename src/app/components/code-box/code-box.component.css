@@ -44,6 +44,7 @@
     width: 100%;
     height: auto;
     text-align: center;
+    white-space: pre
 }
 
 .invader-color {
@@ -57,15 +58,48 @@
     transition: transform 5s linear, opacity 1s ease-in-out;
 }
 
-@media screen and (max-width: 1024px) {
+.caret {
+    font-size: 22px;
+    color: #80F4A5;
+    font-family: monospace;
+    margin: 0;
+}
 
+.blink {
+    animation: blink-animation 1s steps(2, start) infinite;
+}
+
+
+.progress-bar-container {
+    position: absolute;
+    bottom: 25px;
+    left: 25%;
+    width: 50%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+  }
+  
+  .progress-bar-fill {
+    background-color: #80F4A5;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+  }
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+@media screen and (max-width: 1024px) {
     .black_box {
         width: 90%;
     }
 }
 
 @media screen and (max-width: 768px) {
-
     .black_box {
         width: 85%;
     }
