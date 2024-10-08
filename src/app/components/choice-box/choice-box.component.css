@@ -1,0 +1,44 @@
+.choice-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    width: 100vw;
+    height: auto;
+}
+
+.choice-container-black{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    width: 85%;
+    height: 200px;
+    background-color: black;
+}
+
+.yes-button{
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.no-button{
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
