@@ -1,14 +1,14 @@
-.code_container{
+.code_container {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.black_box{
-    width: calc(100% - 654px);
+.black_box {
+    width: calc(70% - 27px);
     min-width: 300px;
-    height: 350px;
+    height: 44vh;
     background-color: black;
     color: white;
     display: flex;
@@ -23,4 +23,28 @@
     font: normal normal normal 70px/72px Minimo;
     color: white;
     text-align: center;
+}
+
+@media screen and (max-width: 1024px) {
+    .abilities-container {
+        flex-direction: column;
+        width: 100%;
+        padding-right: 0;
+    }
+
+    .black_box {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    .black_box {
+        width: 95%;
+        margin: 0 16px;
+    }
+
+    .initial_code_text {
+        font-size: 20px;
+    }
 }
