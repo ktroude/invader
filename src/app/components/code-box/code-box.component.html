@@ -1,8 +1,17 @@
-<div class="code_container">
 
+
+<div class="code_container" tabindex="0" (keydown)="onKeydown($event)">
     <div class="black_box">
-        <p *ngIf="false">Let’s work together. <br> Write anything in here !</p> <!-- Devrait toujours s'afficher -->
-        <p *ngIf="true">Let’s work together. <br> Write anything in here !</p>  <!-- Ne devrait jamais s'afficher -->
-        </div>
+        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+        <img src="/svg/invader_color.svg" alt="Invader" class="invader-color">
+            <span class="initial_code_text" *ngIf="userCode.length === 0">Let's work together. <br> Write anything <span class="highlight">in here</span> !</span>
 
+            <p class="user_code" *ngIf="userCode.length > 0" [innerHTML]="displayedCode">
+
+
+    </div>
 </div>
