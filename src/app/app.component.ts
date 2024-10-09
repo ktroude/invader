@@ -3,8 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { IntroComponent } from './components/intro/intro.component';
 import { CodeBoxComponent } from './components/code-box/code-box.component';
-import { ChoiceBoxComponent } from "./components/choice-box/choice-box.component";
-import { AbilitiesComponent } from "./components/abilities/abilities.component";
+import { ChoiceBoxComponent } from './components/choice-box/choice-box.component';
+import { AbilitiesComponent } from './components/abilities/abilities.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,11 +16,11 @@ import { CommonModule } from '@angular/common';
     HeaderComponent,
     IntroComponent,
     CodeBoxComponent,
-    ChoiceBoxComponent,
-    AbilitiesComponent
-],
+    AbilitiesComponent,
+    ChoiceBoxComponent
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'site_web_invader';

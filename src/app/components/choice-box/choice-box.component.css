@@ -74,77 +74,37 @@
     position: absolute;
     width: 50px;
     height: 50px;
+    top: 100%; /* Démarrage par défaut depuis le bas */
 }
 
 .space-invader-0 {
     left: 5%;
-    animation: move-invader-bottom 8s linear infinite;
 }
 
 .space-invader-1 {
     left: 10%;
-    animation: move-invader-top 5s linear infinite;
 }
 
 .space-invader-2 {
-    left: 19%;
-    animation: move-invader-bottom 4.5s linear infinite;
+    left: 15%;
 }
 
 .space-invader-3 {
-    left: 28%;
-    animation: move-invader-top 8s linear infinite;
+    left: 20%;
 }
 
 .space-invader-4 {
-    left: 65%;
-    animation: move-invader-bottom 3.2s linear infinite;
+    left: 80%;
 }
 
 .space-invader-5 {
-    left: 73%;
-    animation: move-invader-top 5.2s linear infinite;
+    left: 85%;
 }
 
 .space-invader-6 {
-    left: 83%;
-    animation: move-invader-bottom 5s linear infinite;
+    left: 90%;
 }
-
 
 .space-invader-7 {
-    left: 92%;
-    animation: move-invader-top 7.3s linear infinite;
-}
-
-
-@keyframes move-invader-top {
-    0% {
-        top: 100%;
-    }
-    100% {
-        top: -10%;
-    }
-}
-
-@keyframes move-invader-bottom {
-    0% {
-        bottom: 100%;
-    }
-    100% {
-        bottom: -10%;
-    }
-}
-
-.no-button{
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
+    left: 95%;
 }
