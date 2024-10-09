@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
 .choice-container{
     display: flex;
     justify-content: center;
@@ -9,25 +11,129 @@
 }
 
 .choice-container-black{
+    position: relative; /* Pour positionner les invaders */
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 500px;
+    height: 550px;
     background-color: black;
+    overflow: hidden; /* Pour masquer les invaders sortants */
 }
 
-.yes-button{
-    background-color: green;
-    color: white;
-    border: none;
-    padding: 10px 20px;
+.choice-button-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 20%;
+    min-width: 300px;
+}
+
+.choice-button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font: normal normal normal 60px/90px Poppins;
+    border: none;
+    background-color: transparent;
+    color: white;
     cursor: pointer;
+}
+
+.underline{
+    height: 8px;
+    width: 100%;
+    border-radius: 30px;
+    background: transparent linear-gradient(93deg, #FAA2FF, #80F4A5) 0% 0% no-repeat padding-box;
+    background-size: 200% 200%;
+    animation: gradient-flow 5s ease infinite;
+}
+
+@keyframes gradient-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.choice-texte {
+    font: normal normal normal 77px/70px Minimo;
+    color: #ffffff;
+    text-align: center;
+}
+
+.space-invader {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+}
+
+.space-invader-0 {
+    left: 5%;
+    animation: move-invader-bottom 8s linear infinite;
+}
+
+.space-invader-1 {
+    left: 10%;
+    animation: move-invader-top 5s linear infinite;
+}
+
+.space-invader-2 {
+    left: 19%;
+    animation: move-invader-bottom 4.5s linear infinite;
+}
+
+.space-invader-3 {
+    left: 28%;
+    animation: move-invader-top 8s linear infinite;
+}
+
+.space-invader-4 {
+    left: 65%;
+    animation: move-invader-bottom 3.2s linear infinite;
+}
+
+.space-invader-5 {
+    left: 73%;
+    animation: move-invader-top 5.2s linear infinite;
+}
+
+.space-invader-6 {
+    left: 83%;
+    animation: move-invader-bottom 5s linear infinite;
+}
+
+
+.space-invader-7 {
+    left: 92%;
+    animation: move-invader-top 7.3s linear infinite;
+}
+
+
+@keyframes move-invader-top {
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: -10%;
+    }
+}
+
+@keyframes move-invader-bottom {
+    0% {
+        bottom: 100%;
+    }
+    100% {
+        bottom: -10%;
+    }
 }
 
 .no-button{
