@@ -14,14 +14,36 @@ import { Missile } from './missile';
 })
 export class HeaderComponent implements OnInit {
   private invaderStepY = 10; // How much to move down when they hit a border
+  private cellSize = 30; // Size of each cell
 
   /**
    * ngOnInit initializes the component by creating the grid and starting 
    * the invader animation.
    */
   ngOnInit() {
+    this.cellSize = this.calculateCellSize(); // Initialize cellSize based on header dimensions
     this.createGrid(); // Create the grid of cells
     this.animateInvaders(); // Initialize the animation of invaders
+  }
+
+  /**
+   * 
+   * Calculates the size of each cell based on the dimensions of the header container.
+   * The cell size is determined by dividing the width and height of the container
+   * by the desired number of columns and rows.
+   */
+  private calculateCellSize(): number {
+    const headerContainer = document.querySelector('.header_container') as HTMLElement;
+    
+    const numCols = 10; // Number of columns you want
+    const numRows = 30; // Number of rows you want
+    
+    const calculatedCellSize = Math.min(
+      headerContainer.clientWidth / numCols, // Width divided by desired number of columns
+      headerContainer.clientHeight / numRows  // Height divided by desired number of rows
+    );
+
+    return calculatedCellSize;
   }
 
   /**
@@ -30,21 +52,20 @@ export class HeaderComponent implements OnInit {
    */
   createGrid() {
     const headerContainer = document.querySelector('.header_container') as HTMLElement;
-    const cellSize = 30; // Size of each cell
 
-    const numRows = Math.floor(headerContainer.clientHeight / cellSize);
-    const numCols = Math.floor(headerContainer.clientWidth / cellSize);
+    const numRows = Math.floor(headerContainer.clientHeight / this.cellSize);
+    const numCols = Math.floor(headerContainer.clientWidth / this.cellSize);
 
     // Create a grid of cells
     for (let row = 0; row < numRows; row++) {
       for (let col = 0; col < numCols; col++) {
         const cell = document.createElement('div');
         cell.classList.add('cell');
-        cell.style.width = `${cellSize}px`;
-        cell.style.height = `${cellSize}px`;
+        cell.style.width = `${this.cellSize}px`;
+        cell.style.height = `${this.cellSize}px`;
         cell.style.position = 'absolute';
-        cell.style.left = `${col * cellSize}px`;
-        cell.style.top = `${row * cellSize}px`;
+        cell.style.left = `${col * this.cellSize}px`;
+        cell.style.top = `${row * this.cellSize}px`;
         cell.dataset['destroyed'] = 'false'; // Mark the cell as intact
         headerContainer.appendChild(cell);
       }
@@ -176,17 +197,16 @@ export class HeaderComponent implements OnInit {
   private findTargetCell(invader: HTMLElement): HTMLElement | null {
     const cells = document.querySelectorAll('.cell') as NodeListOf<HTMLElement>;
     const invaderRect = invader.getBoundingClientRect();
-    const cellSize = 30;
 
     // Determine the index of the invader's column
-    const columnIndex = Math.floor((invaderRect.left + invaderRect.width / 2) / cellSize);
+    const columnIndex = Math.floor((invaderRect.left + invaderRect.width / 2) / this.cellSize);
 
     // Initialize a variable to store the last available cell
     let lastAvailableCell: HTMLElement | null = null;
 
     // Loop through the cells in the column to find the last non-destroyed cell
-    for (let row = 0; row < cells.length / Math.floor(document.querySelector('.header_container')!.clientWidth / cellSize); row++) {
-      const cell = cells[row * Math.floor(document.querySelector('.header_container')!.clientWidth / cellSize) + columnIndex];
+    for (let row = 0; row < cells.length / Math.floor(document.querySelector('.header_container')!.clientWidth / this.cellSize); row++) {
+      const cell = cells[row * Math.floor(document.querySelector('.header_container')!.clientWidth / this.cellSize) + columnIndex];
       if (cell && cell.dataset['destroyed'] === 'false') {
         const cellRect = cell.getBoundingClientRect();
         // Check that the cell is below the invader
@@ -207,13 +227,12 @@ export class HeaderComponent implements OnInit {
    */
   isInvaderInCenter(invader: HTMLElement): boolean {
     const invaderRect = invader.getBoundingClientRect();
-    const cellSize = 30; // The size of the cells is defined in createGrid
 
     // Check if the invader is in the center of a cell
     const centerX = Math.round((invaderRect.left + invaderRect.right) / 2);
     const centerY = Math.round((invaderRect.top + invaderRect.bottom) / 2);
 
     // Check if the invader's center position matches a cell
-    return (centerX % cellSize === 0);
+    return (centerX % this.cellSize === 0);
   }
 }
