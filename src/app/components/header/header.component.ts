@@ -21,29 +21,9 @@ export class HeaderComponent implements OnInit {
    * the invader animation.
    */
   ngOnInit() {
-    this.cellSize = this.calculateCellSize(); // Initialize cellSize based on header dimensions
+    this.cellSize = 30; // Initialize cellSize based on header dimensions
     this.createGrid(); // Create the grid of cells
     this.animateInvaders(); // Initialize the animation of invaders
-  }
-
-  /**
-   * 
-   * Calculates the size of each cell based on the dimensions of the header container.
-   * The cell size is determined by dividing the width and height of the container
-   * by the desired number of columns and rows.
-   */
-  private calculateCellSize(): number {
-    const headerContainer = document.querySelector('.header_container') as HTMLElement;
-    
-    const numCols = 10; // Number of columns you want
-    const numRows = 30; // Number of rows you want
-    
-    const calculatedCellSize = Math.min(
-      headerContainer.clientWidth / numCols, // Width divided by desired number of columns
-      headerContainer.clientHeight / numRows  // Height divided by desired number of rows
-    );
-
-    return calculatedCellSize;
   }
 
   /**
