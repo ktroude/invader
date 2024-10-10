@@ -21,22 +21,9 @@ export class HeaderComponent implements OnInit {
    * the invader animation.
    */
   ngOnInit() {
-    const headerContainer = document.querySelector('.header_container') as HTMLElement;
-
-    // Get the height of the header
-    const headerHeight = headerContainer.getBoundingClientRect().height;
-
-    // Calculate the optimal cell size (e.g., 1/10th of the height)
-    this.cellSize = Math.floor(headerHeight / 50); // Adjust the divisor as needed
-
-    // Ensure cellSize is not too small
-    if (this.cellSize < 10) {
-        this.cellSize = 10; // Set a minimum size if needed
-    }
-
     this.createGrid(); // Create the grid of cells
     this.animateInvaders(); // Initialize the animation of invaders
-}
+  }
 
 
   /**
@@ -46,8 +33,8 @@ export class HeaderComponent implements OnInit {
   createGrid() {
     const headerContainer = document.querySelector('.header_container') as HTMLElement;
 
-    const numRows = Math.floor(headerContainer.clientHeight / this.cellSize);
-    const numCols = Math.floor(headerContainer.clientWidth / this.cellSize);
+    const numRows = Math.round(headerContainer.clientHeight / this.cellSize);
+    const numCols = Math.round(headerContainer.clientWidth / this.cellSize);
 
     // Create a grid of cells
     for (let row = 0; row < numRows; row++) {
