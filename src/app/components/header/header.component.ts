@@ -14,17 +14,30 @@ import { Missile } from './missile';
 })
 export class HeaderComponent implements OnInit {
   private invaderStepY = 10; // How much to move down when they hit a border
-  private cellSize = 30; // Size of each cell
+  private cellSize: number = 30; // Size of each cell
 
   /**
    * ngOnInit initializes the component by creating the grid and starting 
    * the invader animation.
    */
   ngOnInit() {
-    this.cellSize = 30; // Initialize cellSize based on header dimensions
+    const headerContainer = document.querySelector('.header_container') as HTMLElement;
+
+    // Get the height of the header
+    const headerHeight = headerContainer.getBoundingClientRect().height;
+
+    // Calculate the optimal cell size (e.g., 1/10th of the height)
+    this.cellSize = Math.floor(headerHeight / 50); // Adjust the divisor as needed
+
+    // Ensure cellSize is not too small
+    if (this.cellSize < 10) {
+        this.cellSize = 10; // Set a minimum size if needed
+    }
+
     this.createGrid(); // Create the grid of cells
     this.animateInvaders(); // Initialize the animation of invaders
-  }
+}
+
 
   /**
    * Creates a grid of cells in the header container.
