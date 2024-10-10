@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Minimo';
+    src: url('/font/Ahmet-Altun-Minimo-Regular_0.otf') format('opentype');
+}
+
 .header_container {
     width: 100vw;
     height: 100vh;
@@ -10,8 +15,9 @@
     background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
-    position: relative; /* Important for positioning invaders */
+    position: relative;
 }
+
 
 .invader_header {
     position: absolute;
@@ -33,15 +39,16 @@
         z-index: 2;
 }
 
-@font-face {
-    font-family: 'Minimo';
-    src: url('/font/Ahmet-Altun-Minimo-Regular_0.otf') format('opentype');
+.invader {
+    position: absolute;
+    width: 60px; /* Ajustez la taille de l'invader */
+    height: auto;
+    left: 0; /* Position initiale */
+    top: 0; /* Position initiale */
 }
 
-.invader {
-    position: absolute; /* Absolute to position them freely */
-    width: 50px;
-    height: auto;
-    opacity: 1;
-    transition: transform 0.5s linear;
+.cell {
+    background-color: white; /* Couleur de la cellule */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Pour visualiser les cellules */
+    position: absolute;
 }
