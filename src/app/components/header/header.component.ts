@@ -14,25 +14,99 @@ export class HeaderComponent implements OnInit {
     this.animateInvaders();
   }
 
-  /**
-   * Animates all invaders by randomly positioning them and setting their movement intervals.
-   */
   animateInvaders() {
-    const invaders = document.querySelectorAll('.invader');
-    invaders.forEach(invader => {
-      // Initial spawn at a random location
-      this.spawnInvader(invader as HTMLElement);
-
-      // Set a random speed for each invader (between 3 and 7 seconds)
-      const randomSpeed = Math.random() * 4000 + 3000;
-
-      // Change direction at random intervals
-      setInterval(() => {
-        this.moveInvader(invader as HTMLElement);
-        this.shoot(invader as HTMLElement); // Call shoot for each invader
-      }, randomSpeed);
-    });
+    const invaders = document.querySelectorAll('.invader') as NodeListOf<HTMLElement>;
+    const numRows = 2; // Nombre de lignes d'invaders
+    const numCols = Math.floor(invaders.length / numRows); // Nombre de colonnes d'invaders
+    const horizontalSpeed = 2; // Vitesse horizontale
+    let direction = 1; // Direction horizontale (1 pour droite, -1 pour gauche)
+    let invaderStepY = 10; // Descente (ou montée) en pixels
+    let maxRight = window.innerWidth - 60; // Bord droit de l'écran
+    let maxLeft = 0; // Bord gauche de l'écran
+    let headerContainer = document.querySelector('.header_container') as HTMLElement;
+    let maxHeight = headerContainer.clientHeight; // Hauteur de la div principale
+    const thresholdHeight = maxHeight / 3; // 1/3 de la hauteur
+    let movingDown = true; // Si les invaders doivent descendre ou monter
+  
+    // Organise les invaders en quinconce
+    this.arrangeInvadersInGrid(invaders, numRows, numCols);
+  
+    // Intervalle pour animer les invaders
+    setInterval(() => {
+      let reachedEdge = false; // Détecte si un invader a touché un bord
+  
+      invaders.forEach(invader => {
+        // Position horizontale actuelle
+        const currentLeft = parseFloat(invader.style.left || '0');
+        const currentTop = parseFloat(invader.style.top || '0');
+  
+        // Mouvement horizontal
+        invader.style.left = `${currentLeft + horizontalSpeed * direction}px`;
+  
+        // Si un invader touche le bord droit ou gauche, on signale
+        if (currentLeft + horizontalSpeed * direction >= maxRight || currentLeft + horizontalSpeed * direction <= maxLeft) {
+          reachedEdge = true;
+        }
+  
+        // Mouvement vertical : descente ou montée selon la phase
+        if (movingDown) {
+          // Si les invaders atteignent le seuil de 1/3 de la hauteur, on inverse
+          if (currentTop + invaderStepY >= thresholdHeight) {
+            movingDown = false; // Commence à remonter
+          }
+        } else {
+          // Si les invaders atteignent le haut de la div, ils redescendent
+          if (currentTop <= 0) {
+            movingDown = true; // Recommence à descendre
+          }
+        }
+      });
+  
+      // Si un invader touche un bord, on descend ou monte tous les invaders d'un step Y
+      if (reachedEdge) {
+        direction *= -1; // Change la direction horizontale
+        invaders.forEach(invader => {
+          const currentTop = parseFloat(invader.style.top || '0');
+          if (movingDown) {
+            // Descente
+            invader.style.top = `${currentTop + invaderStepY}px`;
+          } else {
+            // Montée
+            invader.style.top = `${currentTop - invaderStepY}px`;
+          }
+        });
+      }
+    }, 1); // Intervalle de 100ms pour un mouvement fluide
   }
+  
+  
+  
+  
+  /**
+   * Arranges invaders in a grid formation.
+   * @param invaders List of invaders to arrange.
+   * @param numRows Number of rows in the grid.
+   * @param numCols Number of columns in the grid.
+   */
+  arrangeInvadersInGrid(invaders: NodeListOf<HTMLElement>, numRows: number, numCols: number) {
+    const invaderSpacingX = 120; // Horizontal space between invaders
+    const invaderSpacingY = 70;  // Vertical space between invaders
+    let index = 0;
+  
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols; col++) {
+        const invader = invaders[index];
+        if (invader) {
+          // For every even row, shift the invaders horizontally by half the spacing
+          const offsetX = (row % 2 === 0) ? 0 : invaderSpacingX / 2;
+          invader.style.left = `${col * invaderSpacingX + offsetX}px`;
+          invader.style.top = `${row * invaderSpacingY}px`;
+        }
+        index++;
+      }
+    }
+  }
+  
 
   /**
    * Positions an invader at a random location within the header container.

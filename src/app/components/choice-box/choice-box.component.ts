@@ -24,14 +24,14 @@ export class ChoiceBoxComponent implements OnInit {
    */
   ngOnInit(): void {
     this.invaders = [
-      new Invader(0, 5, 50, 'top', 0.7, 0),
-      new Invader(1, 15, 50, 'top', 0.7, 45),
-      new Invader(2, 25, 50, 'bottom', 0.5, 90),
-      new Invader(3, 35, 50, 'top', 1, 135),
-      new Invader(4, 65, 50, 'bottom', 0.62, 180),
-      new Invader(5, 75, 50, 'top', 0.62, 225),
-      new Invader(6, 85, 50, 'bottom', 0.8, 270),
-      new Invader(7, 95, 50, 'top', 0.84, 315),
+      new Invader(0, 5, 35, 'top', 0.7, 0),
+      new Invader(1, 15, 58, 'top', 0.7, 45),
+      new Invader(2, 25, 24, 'bottom', 0.5, 90),
+      new Invader(3, 35, 83, 'top', 1, 135),
+      new Invader(4, 65, 46, 'bottom', 0.62, 180),
+      new Invader(5, 75, 81, 'top', 0.62, 225),
+      new Invader(6, 85, 23, 'bottom', 0.8, 270),
+      new Invader(7, 95, 67, 'top', 0.84, 315),
     ];
 
     this.startAnimation(); // Start the animation loop
@@ -49,7 +49,7 @@ export class ChoiceBoxComponent implements OnInit {
             invader.move(); // Normal movement
             break;
           case 1:
-            invader.moveToTarget(); // Move towards the target
+            invader.moveToTarget(2); // Move towards the target
             break;
           case 2:
             invader.dance(); // Dancing movement
@@ -84,25 +84,38 @@ export class ChoiceBoxComponent implements OnInit {
   onYesClick(): void {
     const yesButton = this.el.nativeElement.querySelector('#yes-button');
     const yesButtonRect = yesButton.getBoundingClientRect();
-
+    
     // Calculate the center of the "Yes" button
     const centerX = Math.round(yesButtonRect.left + yesButtonRect.width / 2);
     const centerY = Math.round(yesButtonRect.top + yesButtonRect.height / 2);
-
+    
     // Define radii for the oval
     const radiusX = 140; // Horizontal radius (width)
     const radiusY = 160; // Vertical radius (height)
-
+    
     this.invaders.forEach((invader) => {
+      if (invader.target === 2) {
+        return;
+      }
       const angleInRadians = invader.angle * (Math.PI / 180);
       const targetX = centerX + (radiusX * Math.cos(angleInRadians));
       const targetY = centerY + (radiusY * Math.sin(angleInRadians) - 100);
-
+      
       // Adjust the coordinates
       invader.targetX = targetX - (invader.width / 2);
       invader.targetY = targetY - (invader.height / 2);
 
       invader.target = 1; // Indicate that the invader should move towards the target
+    });
+  }
+
+    /**
+   * Event handler for when the "No" button is clicked.
+   * Stop mouving for now.
+   */
+  onNoClick(): void {
+    this.invaders.forEach((invader) => {
+      invader.target = 5; // Indicate that the invader should start dancing
     });
   }
 

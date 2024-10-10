@@ -10,6 +10,7 @@
     background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
+    position: relative; /* Important for positioning invaders */
 }
 
 .invader_header {
@@ -38,12 +39,9 @@
 }
 
 .invader {
-    position: absolute;
+    position: absolute; /* Absolute to position them freely */
     width: 50px;
     height: auto;
-    top: 0;
-    left: 0;
-    z-index: 3;
-    opacity: 0;
-    transition: transform 5s linear, opacity 1s ease-in-out;
+    opacity: 1;
+    transition: transform 0.5s linear;
 }
