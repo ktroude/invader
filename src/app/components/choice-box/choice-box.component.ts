@@ -87,9 +87,11 @@ export class ChoiceBoxComponent implements OnInit {
   
     const yesButtonRect = yesButton.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
+
+    const deltaY = window.innerHeight >= 1050 ? 360 : window.innerHeight >= 820 ? 280 : window.innerHeight >= 720 ? 240 : window.innerHeight < 400 ? -80 : 120;
   
     const centerX = Math.round(yesButtonRect.left + yesButtonRect.width / 2 + window.scrollX);
-    const centerY = Math.round(yesButtonRect.top + yesButtonRect.height / 2 + window.scrollY) + 360;
+    const centerY = Math.round(yesButtonRect.top + yesButtonRect.height / 2 + window.scrollY) + deltaY;
   
     const containerX = Math.round(containerRect.left + window.scrollX);
     const containerY = Math.round(containerRect.top + window.scrollY);
