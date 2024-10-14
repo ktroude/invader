@@ -83,31 +83,39 @@ export class ChoiceBoxComponent implements OnInit {
    */
   onYesClick(): void {
     const yesButton = this.el.nativeElement.querySelector('#yes-button');
+    const container = this.el.nativeElement.querySelector('.choice-container');
+  
     const yesButtonRect = yesButton.getBoundingClientRect();
-    
-    // Calculate the center of the "Yes" button
-    const centerX = Math.round(yesButtonRect.left + yesButtonRect.width / 2);
-    const centerY = Math.round(yesButtonRect.top + yesButtonRect.height / 2);
-    
-    // Define radii for the oval
-    const radiusX = 140; // Horizontal radius (width)
-    const radiusY = 160; // Vertical radius (height)
-    
+    const containerRect = container.getBoundingClientRect();
+  
+    const centerX = Math.round(yesButtonRect.left + yesButtonRect.width / 2 + window.scrollX);
+    const centerY = Math.round(yesButtonRect.top + yesButtonRect.height / 2 + window.scrollY) + 360;
+  
+    const containerX = Math.round(containerRect.left + window.scrollX);
+    const containerY = Math.round(containerRect.top + window.scrollY);
+  
+    const relativeCenterX = centerX - containerX;
+    const relativeCenterY = centerY - containerY;
+  
+    const radiusX = 140;
+    const radiusY = 160;
+  
     this.invaders.forEach((invader) => {
       if (invader.target === 2) {
         return;
       }
+  
       const angleInRadians = invader.angle * (Math.PI / 180);
-      const targetX = centerX + (radiusX * Math.cos(angleInRadians));
-      const targetY = centerY + (radiusY * Math.sin(angleInRadians) - 100);
-      
-      // Adjust the coordinates
+      const targetX = relativeCenterX + (radiusX * Math.cos(angleInRadians));
+      const targetY = relativeCenterY + (radiusY * Math.sin(angleInRadians));
+  
       invader.targetX = targetX - (invader.width / 2);
       invader.targetY = targetY - (invader.height / 2);
-
-      invader.target = 1; // Indicate that the invader should move towards the target
+  
+      invader.target = 1;
     });
   }
+  
 
     /**
    * Event handler for when the "No" button is clicked.
