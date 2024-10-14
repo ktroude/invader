@@ -18,7 +18,6 @@
     position: relative;
 }
 
-
 .invader_header {
     position: absolute;
     top: 50%;
@@ -41,14 +40,21 @@
 
 .invader {
     position: absolute;
-    width: 60px; /* Ajustez la taille de l'invader */
+    width: 2.5vw;
     height: auto;
-    left: 0; /* Position initiale */
-    top: 0; /* Position initiale */
+    left: 0;
+    top: 0;
 }
 
 .cell {
-    background-color: white; /* Couleur de la cellule */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Pour visualiser les cellules */
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     position: absolute;
 }
+/* 
+
+@media screen and (max-width: 1024px) {
+    .invader {
+        width: 30px;
+    }
+} */

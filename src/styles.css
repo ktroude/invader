@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+/* Styles pour les navigateurs basés sur WebKit (Chrome, Safari, Edge moderne) */
+::-webkit-scrollbar {
+    width: 12px; /* Largeur totale de la scrollbar */
+}
+  
+::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 7px;
+    border: 2px solid transparent; /* Espace transparent autour du thumb */
+    width: 90%; /* Réduire visuellement la largeur du thumb */
+    box-sizing: border-box; /* Inclure le bord transparent dans la taille totale */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #333;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 7px;
+  }
+  
+  ::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+  }
+  

@@ -13,7 +13,7 @@ import { Missile } from './missile';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  private invaderStepY = 10; // How much to move down when they hit a border
+  private invaderStepY = 5; // How much to move down when they hit a border
   private cellSize: number = 30; // Size of each cell
 
   /**
@@ -64,56 +64,61 @@ export class HeaderComponent implements OnInit {
     let direction = 1; // Start moving to the right
     let maxRight = window.innerWidth - 60; // Right edge of the screen (considering invader width)
     let maxLeft = 0; // Left edge of the screen
-    const threshold = document.querySelector('.header_container')!.clientHeight / 3; // 1/3 of the height of the div
-
+    const maxHeight = document.querySelector('.header_container')!.clientHeight; // Total height of the div
+    const threshold = maxHeight / 3; // 1/3 of the height of the div is the max descent
+  
+    let descending = true; // Boolean to determine if invaders are descending or ascending
+  
     // Arrange the invaders in a grid
     this.arrangeInvadersInGrid(invaders, numRows, numCols);
-
+  
     // Set interval to move invaders
     setInterval(() => {
       let reachedEdge = false;
-
+  
       invaders.forEach(invader => {
         const currentLeft = parseFloat(invader.style.left || '0');
         invader.style.left = `${currentLeft + horizontalSpeed * direction}px`;
-
+  
         // Check if the invader touches the edge of the screen
         if (currentLeft + horizontalSpeed * direction >= maxRight || currentLeft + horizontalSpeed * direction <= maxLeft) {
           reachedEdge = true;
         }
-
-        // Check if the invader has reached the height threshold
-        const currentTop = parseFloat(invader.style.top || '0');
-        if (currentTop >= threshold) {
-          direction *= -1; // Reverse horizontal direction
-          invader.style.top = `${currentTop - this.invaderStepY}px`; // Move the invader up
-        }
       });
-
-      // If an invader reaches an edge, reverse direction and move down
+  
+      // If an invader reaches an edge, reverse direction and move down or up
       if (reachedEdge) {
-        direction *= -1; // Reverse direction
+        direction *= -1; // Reverse direction horizontally
+  
         invaders.forEach(invader => {
           const currentTop = parseFloat(invader.style.top || '0');
-          const newTop = currentTop + this.invaderStepY;
-
-          // If the invader hits the bottom of the div, move slightly up
-          if (newTop < window.innerHeight * 0.66) { // Keep invaders in the upper third
-            invader.style.top = `${newTop}px`;
+          let newTop = currentTop;
+  
+          // Move down if descending and haven't reached the threshold yet
+          if (descending) {
+            newTop = currentTop + this.invaderStepY; // Move down
+            if (newTop >= threshold) {
+              descending = false; // Start ascending after reaching the threshold
+            }
           } else {
-            invader.style.top = `${currentTop - this.invaderStepY}px`;
+            // Move up if ascending
+            newTop = currentTop - this.invaderStepY; // Move up
+            if (newTop <= 0) {
+              descending = true; // Start descending after reaching the top
+            }
           }
+  
+          invader.style.top = `${newTop}px`;
         });
       }
-
+  
       // Shoot missiles randomly
       invaders.forEach(invader => {
-        if (this.isInvaderInCenter(invader)) {
-          this.shoot(invader); // Call the shoot function
-        }
+        Math.random() < 0.1 && this.shoot(invader);
       });
     }, 10); // Adjust the time interval for smoother movement
   }
+  
 
   /**
    * Arranges the invaders in a grid based on specified number of rows and columns.
@@ -199,20 +204,4 @@ export class HeaderComponent implements OnInit {
     return lastAvailableCell; // Return the last non-destroyed cell found
   }
 
-  /**
-   * Checks if the given invader is positioned in the center of a cell.
-   * 
-   * @param invader - The invader element to check.
-   * @returns True if the invader is centered in a cell, false otherwise.
-   */
-  isInvaderInCenter(invader: HTMLElement): boolean {
-    const invaderRect = invader.getBoundingClientRect();
-
-    // Check if the invader is in the center of a cell
-    const centerX = Math.round((invaderRect.left + invaderRect.right) / 2);
-    const centerY = Math.round((invaderRect.top + invaderRect.bottom) / 2);
-
-    // Check if the invader's center position matches a cell
-    return (centerX % this.cellSize === 0);
-  }
 }
