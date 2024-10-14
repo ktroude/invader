@@ -1,0 +1,9 @@
+<svg id="CTA" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="290" height="58" viewBox="0 0 290 58">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.037" y1="0.226" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#faa2ff"/>
+      <stop offset="1" stop-color="#80f4a5"/>
+    </linearGradient>
+  </defs>
+  <rect id="Rectangle_25" data-name="Rectangle 25" width="290" height="58" rx="29" fill="url(#linear-gradient)"/>
+</svg>

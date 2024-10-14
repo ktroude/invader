@@ -6,6 +6,7 @@ import { CodeBoxComponent } from './components/code-box/code-box.component';
 import { ChoiceBoxComponent } from './components/choice-box/choice-box.component';
 import { AbilitiesComponent } from './components/abilities/abilities.component';
 import { CommonModule } from '@angular/common';
+import { ContactComponent } from "./components/contact/contact.component";
 
 @Component({
   selector: 'app-root',
@@ -17,8 +18,9 @@ import { CommonModule } from '@angular/common';
     IntroComponent,
     CodeBoxComponent,
     AbilitiesComponent,
-    ChoiceBoxComponent
-  ],
+    ChoiceBoxComponent,
+    ContactComponent
+],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
