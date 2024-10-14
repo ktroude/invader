@@ -1,14 +1,11 @@
-/* Styles pour les navigateurs basés sur WebKit (Chrome, Safari, Edge moderne) */
 ::-webkit-scrollbar {
-    width: 12px; /* Largeur totale de la scrollbar */
+    width: 12px;
 }
   
 ::-webkit-scrollbar-thumb {
     background-color: black;
     border-radius: 7px;
-    border: 2px solid transparent; /* Espace transparent autour du thumb */
-    width: 90%; /* Réduire visuellement la largeur du thumb */
-    box-sizing: border-box; /* Inclure le bord transparent dans la taille totale */
+    box-sizing: border-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {
