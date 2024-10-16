@@ -59,12 +59,22 @@ export class Invader {
      * Moves the invader towards its target position.
      * Updates the invader's position based on the distance to the target.
      */
-    moveToTarget(target: number) {
-      const invaderXPixels = (this.x * window.innerWidth) / 100; // Convert percentage to pixels
-      const invaderYPixels = (this.y * window.innerHeight) / 100; // Convert percentage to pixels
-  
-      const deltaX = this.targetX - invaderXPixels; // Calculate horizontal distance to target
-      const deltaY = this.targetY - invaderYPixels; // Calculate vertical distance to target
+    moveToTarget(target: number, shouldTranslate: boolean = true) {
+
+      let invaderXPixels; // Convert percentage to pixels
+      let invaderYPixels; // Convert percentage to pixels
+
+
+      if (shouldTranslate) {
+        invaderXPixels = (this.x * window.innerWidth) / 100; // Convert percentage to pixels
+        invaderYPixels = (this.y * window.innerHeight) / 100; // Convert percentage to pixels
+      } else {
+        invaderXPixels = this.x;
+        invaderYPixels = this.y;
+      }
+        
+        const deltaX = this.targetX - invaderXPixels; // Calculate horizontal distance to target
+        const deltaY = this.targetY - invaderYPixels; // Calculate vertical distance to target
       const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2); // Calculate the distance to the target
   
       if (distance > 10) {
@@ -103,5 +113,8 @@ export class Invader {
     comebackInitialPos() {
       this.targetX = this.originalX;
       this.targetY = this.originalY;
+      this.target = 7;
     }
+
+
 }

@@ -23,10 +23,6 @@ export class ChoiceBoxComponent implements OnInit {
    * Initializes the invaders and starts the animation loop.
    */
   ngOnInit(): void {
-
-    const hauteurEcran = window.innerHeight;
-    console.log(`Hauteur de l'écran : ${hauteurEcran}px`);
-
     this.invaders = [
       new Invader(0, 5, 35, 'top', 0.7, 0),
       new Invader(1, 15, 58, 'top', 0.7, 45),
@@ -58,6 +54,33 @@ export class ChoiceBoxComponent implements OnInit {
           case 2:
             invader.dance(); // Dancing movement
             break;
+            case 3:
+              invader.moveToTarget(4); // Move towards the target
+              break;
+            case 4:
+              if (this.allInvadersAtTarget(4)) {
+                setTimeout(() => {
+                  this.invaders.forEach(inv => {
+                    this.kidnapNoButton(inv); // Kidnap each invader
+                  });
+                }, 200); // Attendre 500 ms avant de kidnapper
+              }
+                  break;
+            case 5:
+                invader.moveToTarget(6); // Move towards the target
+              break;
+              case 6:
+                if (this.allInvadersAtTarget(6)) {
+                  setTimeout(() => {
+                    this.invaders.forEach(inv => {
+                      invader.comebackInitialPos();
+                    });
+                  }, 1200); // Attendre 500 ms avant de kidnapper
+                }
+                break;
+              case 7:
+                invader.moveToTarget(0, false);
+                break;
           default:
             break;
         }
@@ -79,6 +102,15 @@ export class ChoiceBoxComponent implements OnInit {
 
     // Start the animation
     this.animationId = requestAnimationFrame(animate);
+  }
+
+  /**
+   * Vérifie si tous les envahisseurs ont atteint leur cible spécifiée.
+   * @param target - La cible à vérifier.
+   * @returns true si tous les envahisseurs sont à la cible, sinon false.
+   */
+  private allInvadersAtTarget(target: number): boolean {
+    return this.invaders.every(invader => invader.target === target);
   }
 
   /**
@@ -125,15 +157,55 @@ export class ChoiceBoxComponent implements OnInit {
   }
   
 
-    /**
-   * Event handler for when the "No" button is clicked.
-   * Stop mouving for now.
-   */
   onNoClick(): void {
+    const noButton = this.el.nativeElement.querySelector('#no-button');
+    const container = this.el.nativeElement.querySelector('.choice-container');
+  
+    const noButtonRect = noButton.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    const deltaY = heightToDeltaY.find(([height]) => window.innerHeight >= height)?.[1] ?? 120;
+    
+    const centerX = Math.round(noButtonRect.left + noButtonRect.width / 2 + window.scrollX);
+    const centerY = Math.round(noButtonRect.top + noButtonRect.height / 2 + window.scrollY) + deltaY;
+  
+    const containerX = Math.round(containerRect.left + window.scrollX);
+    const containerY = Math.round(containerRect.top + window.scrollY);
+  
+    const relativeCenterX = centerX - containerX;
+    const relativeCenterY = centerY - containerY;
+
+    const radiusX =  140;
+    const radiusY = 160;
+  
     this.invaders.forEach((invader) => {
-      invader.target = 5; // Indicate that the invader should start dancing
+      if (invader.target >= 3) {
+        return;
+      }
+  
+      const angleInRadians = invader.angle * (Math.PI / 180);
+      const targetX = relativeCenterX + (radiusX * Math.cos(angleInRadians));
+      const targetY = relativeCenterY + (radiusY * Math.sin(angleInRadians));
+  
+      invader.targetX = targetX - (invader.width / 2);
+      invader.targetY = targetY - (invader.height / 2);
+  
+      invader.target = 3;
     });
+}
+
+  kidnapNoButton(invader: Invader): void {
+    // invader.targetX = window.innerWidth * 0.8;
+    invader.targetY = -100; 
+    invader.target = 5; 
   }
+
+  gobackInit(invader: Invader): void {
+    invader.targetX = invader.originalX;
+    invader.targetY = invader.originalY;
+    invader.target = 7;
+  }
+
 
   /**
    * Lifecycle hook that is called just before the component is destroyed.
