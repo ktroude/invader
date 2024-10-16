@@ -39,6 +39,10 @@
 }
 
 .contact-img{
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     height: 100px;
     width: auto;
 }
@@ -49,6 +53,10 @@
 }
 
 .contact-button {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     border: none;
     background-image: url('/svg/contact-button.svg');
     background-size: cover;

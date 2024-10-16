@@ -4,6 +4,10 @@
 }
 
 .choice-container{
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     display: flex;
     justify-content: center;
     align-items: center;

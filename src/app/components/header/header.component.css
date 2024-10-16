@@ -4,6 +4,10 @@
 }
 
 .header_container {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     width: 100vw;
     height: 100vh;
     display: flex;
