@@ -11,14 +11,7 @@ export class ContactComponent {
   
   // Function to trigger the mailto link
   onContactClick() {
-    const email = 'troude.kev@gmail.com';
-    const subject = encodeURIComponent("Let's work together"); // Encode le sujet pour le format URL
-    const body = encodeURIComponent('Hi Kevin,'); // Encode le corps pour le format URL
-
-    // Create the mailto URL
-    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
-
     // Trigger the mailto link
-    window.location.href = mailtoLink; // Ouvre l'éditeur d'email par défaut
+    window.open('https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=troude.kev@gmail.com&su=Let\'s%20work%20together&body=Hi%20Kevin,');
   }
 }
