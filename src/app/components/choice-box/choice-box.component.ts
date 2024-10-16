@@ -23,6 +23,10 @@ export class ChoiceBoxComponent implements OnInit {
    * Initializes the invaders and starts the animation loop.
    */
   ngOnInit(): void {
+
+    const hauteurEcran = window.innerHeight;
+    console.log(`Hauteur de l'écran : ${hauteurEcran}px`);
+
     this.invaders = [
       new Invader(0, 5, 35, 'top', 0.7, 0),
       new Invader(1, 15, 58, 'top', 0.7, 45),
@@ -88,8 +92,10 @@ export class ChoiceBoxComponent implements OnInit {
     const yesButtonRect = yesButton.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
-    const deltaY = window.innerHeight >= 1050 ? 360 : window.innerHeight >= 820 ? 280 : window.innerHeight >= 720 ? 240 : window.innerHeight < 400 ? -80 : 120;
-  
+    
+
+    const deltaY = heightToDeltaY.find(([height]) => window.innerHeight >= height)?.[1] ?? 120;
+    
     const centerX = Math.round(yesButtonRect.left + yesButtonRect.width / 2 + window.scrollX);
     const centerY = Math.round(yesButtonRect.top + yesButtonRect.height / 2 + window.scrollY) + deltaY;
   
@@ -98,8 +104,8 @@ export class ChoiceBoxComponent implements OnInit {
   
     const relativeCenterX = centerX - containerX;
     const relativeCenterY = centerY - containerY;
-  
-    const radiusX = 140;
+
+    const radiusX =  140;
     const radiusY = 160;
   
     this.invaders.forEach((invader) => {
@@ -139,3 +145,25 @@ export class ChoiceBoxComponent implements OnInit {
     }
   }
 }
+
+
+const heightToDeltaY: [number, number][] = [
+  [2100, 1100],
+  [2000, 1060],
+  [1900, 960],
+  [1800, 880],
+  [1700, 800],
+  [1600, 760],
+  [1500, 680],
+  [1400, 600],
+  [1300, 530],
+  [1200, 480],
+  [1100, 400],
+  [1000, 330],
+  [900, 250],
+  [800, 180],
+  [700, 120],
+  [600, 50],
+  [500, -40],
+  [0, 120]  // Valeur par défaut si aucune correspondance
+];
