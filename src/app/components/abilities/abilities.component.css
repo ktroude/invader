@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@font-face {
+    font-family: 'Pangram';
+    src: url('/font/Pangram-Regular.otf') format('opentype');
+}
 
 .abilities{
     display: flex;
@@ -61,7 +64,7 @@
 }
 
 .abilities-text {
-    font: normal normal normal 26px/30px Poppins;
+    font: 26px/30px 'Pangram';
     color: black;
     text-align: center;
     z-index: 2;
