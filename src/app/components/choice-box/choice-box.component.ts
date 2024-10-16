@@ -11,6 +11,13 @@ export class ChoiceBoxComponent implements OnInit {
   invaders: Invader[] = []; // List of invaders
   private animationId: number | null = null; // ID for animation frame
 
+  private isButtonclicked: boolean = false; // Flag to check if the button is clicked
+
+  noButtonCursor: string = 'pointer'; // Curseur de la souris pour le bouton No
+  noButtonOpacity: number = 1; // Opacité du bouton No
+  buttonNoX: number = 0; // Position X du bouton No
+  buttonNoY: number = 0; // Position Y du bouton No
+  
   /**
    * Initializes a new instance of the ChoiceBoxComponent class.
    * @param renderer - The Renderer2 service for manipulating the DOM.
@@ -91,6 +98,12 @@ export class ChoiceBoxComponent implements OnInit {
         this.renderer.setStyle(invaderElement, 'top', `${invader.y}%`);
       });
 
+      // Mettre à jour la position du bouton No
+      const noButtonElement = this.el.nativeElement.querySelector('#no-button');
+      this.renderer.setStyle(noButtonElement, 'left', `${this.buttonNoX}px`);
+      this.renderer.setStyle(noButtonElement, 'top', `${this.buttonNoY}px`);
+
+
       // Check if all invaders have reached their target
       if (this.invaders.every(invader => invader.target === 2)) {
         this.invaders.forEach(invader => invader.target = 2); // Keep in dance state
@@ -118,6 +131,8 @@ export class ChoiceBoxComponent implements OnInit {
    * Calculates the target positions for the invaders to move towards in an oval pattern.
    */
   onYesClick(): void {
+    if (this.isButtonclicked) {return;}
+    
     const yesButton = this.el.nativeElement.querySelector('#yes-button');
     const container = this.el.nativeElement.querySelector('.choice-container');
   
@@ -154,46 +169,54 @@ export class ChoiceBoxComponent implements OnInit {
   
       invader.target = 1;
     });
+    this.isButtonclicked = true;
+    this.hideNoButtonGradually(); // Rendre le bouton invisible progressivement
   }
   
 
   onNoClick(): void {
+    if (this.isButtonclicked) {return;}
+
     const noButton = this.el.nativeElement.querySelector('#no-button');
     const container = this.el.nativeElement.querySelector('.choice-container');
-  
+    
     const noButtonRect = noButton.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-
+  
     const deltaY = heightToDeltaY.find(([height]) => window.innerHeight >= height)?.[1] ?? 120;
     
     const centerX = Math.round(noButtonRect.left + noButtonRect.width / 2 + window.scrollX);
     const centerY = Math.round(noButtonRect.top + noButtonRect.height / 2 + window.scrollY) + deltaY;
-  
+    
     const containerX = Math.round(containerRect.left + window.scrollX);
     const containerY = Math.round(containerRect.top + window.scrollY);
-  
+    
     const relativeCenterX = centerX - containerX;
     const relativeCenterY = centerY - containerY;
-
-    const radiusX =  140;
-    const radiusY = 160;
   
+    const radiusX = 140;
+    const radiusY = 160;
+    
     this.invaders.forEach((invader) => {
       if (invader.target >= 3) {
         return;
       }
-  
+    
       const angleInRadians = invader.angle * (Math.PI / 180);
       const targetX = relativeCenterX + (radiusX * Math.cos(angleInRadians));
       const targetY = relativeCenterY + (radiusY * Math.sin(angleInRadians));
-  
+    
       invader.targetX = targetX - (invader.width / 2);
       invader.targetY = targetY - (invader.height / 2);
-  
+    
       invader.target = 3;
+  
+      // Calculer la nouvelle position du bouton No
+      this.buttonNoX = targetX; // Update the button's position
+      this.buttonNoY = targetY + 20; // You can adjust this value as needed
     });
-}
-
+  }
+  
   kidnapNoButton(invader: Invader): void {
     // invader.targetX = window.innerWidth * 0.8;
     invader.targetY = -100; 
@@ -204,6 +227,23 @@ export class ChoiceBoxComponent implements OnInit {
     invader.targetX = invader.originalX;
     invader.targetY = invader.originalY;
     invader.target = 7;
+  }
+
+  hideNoButtonGradually(): void {
+    const duration = 2000; // Durée de 2 secondes
+    const interval = 50; // Intervalle de temps en millisecondes
+    const decrement = interval / duration; // Calculer le changement d'opacité à chaque intervalle
+    let opacity = this.noButtonOpacity;
+  
+    const fadeOut = setInterval(() => {
+      opacity -= decrement; // Diminuer l'opacité
+      if (opacity <= 0) {
+        opacity = 0; // S'assurer que l'opacité ne soit pas inférieure à 0
+        clearInterval(fadeOut); // Arrêter l'intervalle lorsque l'opacité est à 0
+      }
+      this.noButtonOpacity = opacity; // Appliquer la nouvelle opacité
+    }, interval);
+    this.noButtonCursor = 'default'; // Changer le curseur de la souris
   }
 
 

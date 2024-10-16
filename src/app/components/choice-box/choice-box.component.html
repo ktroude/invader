@@ -8,7 +8,7 @@
                 Yes
                 <div class="underline"></div>
             </button>            
-            <button id="no-button" class="choice-button" (click)="onNoClick()">No</button>
+            <button id="no-button" class="choice-button"  [style.cursor]="noButtonCursor"  [style.opacity]="noButtonOpacity" (click)="onNoClick()">No</button>
         </div>
         <!-- Space Invaders SVGs -->
         <img src="svg/invader_color.svg" class="space-invader space-invader-0" alt="Space Invader 0">
