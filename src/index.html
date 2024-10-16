@@ -8,6 +8,13 @@
   <link rel="icon" type="image/svg+xml" href="svg/invader_header.svg">
 </head>
 <body style="margin: 0; overflow-x: hidden;">
+  <script>
+    document.addEventListener('keydown', function(event) {
+        if (event.code === 'Space' || event.code === 'Tab') {
+            event.preventDefault();
+        }
+    });
+</script>
   <app-root></app-root>
 </body>
 </html>

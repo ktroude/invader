@@ -22,133 +22,131 @@ function animateInvaders() : void {
     }, randomSpeed);
   });
 }`;
-
-  displayedCode: string = '';  // The code currently displayed to the user.
-  userCode: string = '';       // The code currently typed by the user.
-  increment: number = 4;       // Number of characters to display on each key press.
-  caretVisible: boolean = true;  // To toggle the caret visibility.
-  isTextClicked: boolean = false; // To track if the div is clicked.
-  progress: number = 0;        // Store the progress percentage
+  displayedCode: string = '';      // Code currently displayed
+  totalKeystrokes: number = 0;     // Total number of keystrokes
+  increment: number = 4;           // Number of characters to display per key press
+  caretVisible: boolean = true;    // Blinking caret
+  isTextClicked: boolean = false;  // Check if the input area is clicked
+  progress: number = 0;            // Progress percentage
+  hideProgressBar: boolean = false;// To hide the progress bar
 
   /**
-   * Handles the keydown event.
-   * Displays the next segment of code and updates the user's input.
-   * @param event The keyboard event containing information about the key pressed.
+   * Handles keydown events and increments displayed code based on keystrokes.
    */
   onKeydown(event: KeyboardEvent) {
-    this.isTextClicked = true;  // The user has started interacting, hide the placeholder text.
+    this.isTextClicked = true;  // User has clicked on the text box
 
-    // Check that the user has not exceeded the length of fullCode.
-    if (this.displayedCode.length < this.fullCode.length) {
-      // Display the characters based on the increment.
-      this.displayedCode += this.fullCode.slice(this.displayedCode.length, this.displayedCode.length + this.increment);
+    if (event.key === 'Tab' || event.ctrlKey || event.altKey) {
+      return;  // Skip certain keys (Tab, Ctrl, Alt)
     }
 
-    // Add the typed character to userCode.
-    this.userCode += event.key;
-
-    // Handle the "Backspace" key.
-    if (event.key === 'Backspace' && this.userCode.length > 0) {
-      this.userCode = this.userCode.slice(0, -1);
-      this.displayedCode = this.fullCode.slice(0, this.userCode.length);
+    // Incrementally show the code based on user keystrokes
+    if (this.totalKeystrokes * this.increment < this.fullCode.length) {
+      this.totalKeystrokes++;
+      this.displayedCode = this.fullCode.slice(0, this.totalKeystrokes * this.increment);
     }
 
-    // Update the progress percentage
-    this.progress = Math.min((this.userCode.length / this.fullCode.length) * 100 * 4, 100);
+    // Update the progress based on the amount of code displayed
+    this.progress = Math.min((this.totalKeystrokes * this.increment / this.fullCode.length) * 100, 100);
 
-    // Detect if the user has finished typing.
+    // End typing animation if the full code is displayed
     if (this.displayedCode.length === this.fullCode.length) {
       this.endTypingAnimation();
     }
   }
 
   /**
-   * Returns the rounded progress percentage.
-   * @returns The rounded progress percentage.
-   */
-  getRoundedProgress() {
-    return Math.round(this.progress);
-  }
-
-  /**
-   * Triggers the end of typing animation after a delay.
-   * It scales down and fades out the user's typed code.
+   * Ends the typing animation, then hides the progress bar after a 1-second delay.
    */
   endTypingAnimation() {
     setTimeout(() => {
       const userCodeElement = document.querySelector('.user_code') as HTMLElement;
       if (userCodeElement) {
-        // Animation to shrink the text size and fade it out.
+        // Shrink and fade out the displayed code
         userCodeElement.style.transition = 'transform 1s ease, opacity 1s ease';
-        userCodeElement.style.transform = 'scale(0)'; // Shrinks the text.
-        userCodeElement.style.opacity = '0'; // Fades out the text.
+        userCodeElement.style.transform = 'scale(0)';
+        userCodeElement.style.opacity = '0';
 
-        // Start the invaders' animation after the text has disappeared.
+        // Start invaders' animation and hide progress bar after 1 second
         setTimeout(() => {
-          this.animateInvadersColor(); // Call the invaders' animation function.
-        }, 1000); // Delay matching the animation duration.
+          this.animateInvadersColor();  // Start the invaders' animation
+
+          // Hide progress bar with 1 second delay
+          setTimeout(() => {
+            this.hideProgressBarAnimation();
+          }, 1000);  // Delay of 1 second after invaders appear
+        }, 1000);
       }
-    }, 1000); // One second before starting the animation.
+    }, 1000);
   }
 
   /**
-   * Animates all invaders by randomly positioning them and setting their movement intervals.
+   * Animates invaders, then hides the progress bar.
    */
   animateInvadersColor() {
     const invaders = document.querySelectorAll('.invader-color');
     invaders.forEach(invader => {
-      // Initial spawn at a random location.
       this.spawnInvaderColor(invader as HTMLElement);
-
-      // Set a random speed for each invader (between 3 and 7 seconds).
       const randomSpeed = Math.random() * 4000 + 3000;
-
-      // Change direction at random intervals.
       setInterval(() => {
         this.moveInvaderColor(invader as HTMLElement);
       }, randomSpeed);
     });
   }
 
+/**
+ * Hides the progress bar with a fading animation.
+ */
+hideProgressBarAnimation() {
+  const progressBar = document.querySelector('.progress-bar-container') as HTMLElement;
+  if (progressBar) {
+    // Set the opacity to 0 for a fade-out effect
+    progressBar.style.transition = 'opacity 1s ease';
+    progressBar.style.opacity = '0';
+    
+    // After the transition, set display to none to completely hide it from the DOM
+    setTimeout(() => {
+      progressBar.style.display = 'none';
+    }, 800); // 1 second delay matching the fade-out transition
+  }
+}
+
   /**
-   * Positions an invader at a random location within the header container.
-   * @param invader The invader element to position.
+   * Spawns invader at a random location within the header container.
    */
   spawnInvaderColor(invader: HTMLElement) {
     const headerContainer = document.querySelector('.black_box') as HTMLElement;
     const maxX = headerContainer.clientWidth - invader.clientWidth;
     const maxY = headerContainer.clientHeight - invader.clientHeight;
 
-    // Add margins to prevent the invader from going outside the box.
-    const randomX = Math.floor(Math.random() * (maxX + 1)); // includes maxX
-    const randomY = Math.floor(Math.random() * (maxY + 1)); // includes maxY
+    // Random location
+    const randomX = Math.floor(Math.random() * (maxX + 1));
+    const randomY = Math.floor(Math.random() * (maxY + 1));
 
     invader.style.transform = `translate(${randomX}px, ${randomY}px)`;
-    invader.style.opacity = '1'; // Make the invader visible.
+    invader.style.opacity = '1';
   }
 
   /**
-   * Moves an invader to a new random location within the header container.
-   * @param invader The invader element to move.
+   * Moves invader to a new random location.
    */
   moveInvaderColor(invader: HTMLElement) {
     const headerContainer = document.querySelector('.black_box') as HTMLElement;
     const maxX = headerContainer.clientWidth - invader.clientWidth;
     const maxY = headerContainer.clientHeight - invader.clientHeight;
 
-    // Add margins to prevent the invader from going outside the box.
-    const randomX = Math.floor(Math.random() * (maxX + 1)); // includes maxX
-    const randomY = Math.floor(Math.random() * (maxY + 1)); // includes maxY
+    const randomX = Math.floor(Math.random() * (maxX + 1));
+    const randomY = Math.floor(Math.random() * (maxY + 1));
 
-    invader.style.transition = `transform ${Math.random() * 1 + 0.8}s linear`; // Transition with a random duration.
+    invader.style.transition = `transform ${Math.random() * 1 + 0.8}s linear`;
     invader.style.transform = `translate(${randomX}px, ${randomY}px)`;
   }
 
-  /**
-   * Toggles the caret visibility to create the blinking effect.
+    /**
+   * Returns the rounded progress percentage.
    */
-  toggleCaretVisibility() {
-    this.caretVisible = !this.caretVisible;
-  }
+    getRoundedProgress() {
+      return Math.round(this.progress);
+    }
 
 }
