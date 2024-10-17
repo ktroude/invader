@@ -13,11 +13,11 @@ export class ChoiceBoxComponent implements OnInit {
 
   private isButtonclicked: boolean = false; // Flag to check if the button is clicked
 
-  noButtonCursor: string = 'pointer'; // Curseur de la souris pour le bouton No
-  noButtonOpacity: number = 1; // Opacité du bouton No
-  buttonNoX: number = 0; // Position X du bouton No
-  buttonNoY: number = 0; // Position Y du bouton No
-  
+  noButtonCursor: string = 'pointer'; // Mouse cursor for the "No" button
+  noButtonOpacity: number = 1; // Opacity of the "No" button
+  buttonNoXPercent: number = 0; // X position of the "No" button as a percentage
+  buttonNoYPercent: number = 0; // Y position of the "No" button as a percentage
+
   /**
    * Initializes a new instance of the ChoiceBoxComponent class.
    * @param renderer - The Renderer2 service for manipulating the DOM.
@@ -30,6 +30,23 @@ export class ChoiceBoxComponent implements OnInit {
    * Initializes the invaders and starts the animation loop.
    */
   ngOnInit(): void {
+    const noButtonElement = this.el.nativeElement.querySelector('#no-button');
+
+    // Get dimensions of the parent container (or window if needed)
+    const parentElement = noButtonElement.offsetParent as HTMLElement;
+    const parentWidth = parentElement.offsetWidth;
+    const parentHeight = parentElement.offsetHeight;
+    
+    // Get button positions relative to the parent container
+    const buttonLeft = noButtonElement.offsetLeft;
+    const buttonTop = noButtonElement.offsetTop;
+    
+    // Convert positions to percentages
+    this.buttonNoXPercent = (buttonLeft / parentWidth) * 100;
+    this.buttonNoYPercent = (buttonTop / parentHeight) * 100;
+    console.log('Button positions in INIT:', this.buttonNoXPercent, this.buttonNoYPercent);
+
+    // Initialize invaders with their positions, angles, and speeds
     this.invaders = [
       new Invader(0, 5, 35, 'top', 0.7, 0),
       new Invader(1, 15, 58, 'top', 0.7, 45),
@@ -48,7 +65,7 @@ export class ChoiceBoxComponent implements OnInit {
    * Starts the animation loop for the invaders.
    * Calls the appropriate movement method based on the invader's target state.
    */
-  startAnimation() {
+  startAnimation(): void {
     const animate = () => {
       this.invaders.forEach((invader) => {
         switch (invader.target) {
@@ -59,54 +76,50 @@ export class ChoiceBoxComponent implements OnInit {
             invader.moveToTarget(2); // Move towards the target
             break;
           case 2:
-            invader.dance(); // Dancing movement
+            invader.dance(); // Dancing movement around the "Yes" button
             break;
-            case 3:
-              invader.moveToTarget(4); // Move towards the target
-              break;
-            case 4:
-              if (this.allInvadersAtTarget(4)) {
-                setTimeout(() => {
-                  this.invaders.forEach(inv => {
-                    this.kidnapNoButton(inv); // Kidnap each invader
-                  });
-                }, 200); // Attendre 500 ms avant de kidnapper
-              }
-                  break;
-            case 5:
-                invader.moveToTarget(6); // Move towards the target
-              break;
-              case 6:
-                if (this.allInvadersAtTarget(6)) {
-                  setTimeout(() => {
-                    this.invaders.forEach(inv => {
-                      invader.comebackInitialPos();
-                    });
-                  }, 1200); // Attendre 500 ms avant de kidnapper
-                }
-                break;
-              case 7:
-                invader.moveToTarget(0, false);
-                break;
+          case 3:
+            invader.moveToTarget(4); // Move towards the "No" button
+            break;
+          case 4:
+            if (this.allInvadersAtTarget(4)) {
+              setTimeout(() => {
+                this.invaders.forEach(inv => this.kidnapNoButton(inv)); // Kidnap the "No" button
+              }, 200); 
+            }
+            break;
+          case 5:
+            invader.moveToTarget(6); // Move invaders away after kidnapping
+            if (invader.id === 0) this.buttonNoYPercent -= 1; // Update "No" button Y position
+            break;
+          case 6:
+            if (this.allInvadersAtTarget(6)) {
+              setTimeout(() => {
+                this.invaders.forEach(inv => invader.comebackInitialPos()); // Reset to initial position
+              }, 1200);
+            }
+            break;
+          case 7:
+            invader.moveToTarget(0, false); // Return to initial position
+            break;
           default:
             break;
         }
 
-        // Apply styles to the invader elements
+        // Apply styles to invader elements based on their updated positions
         const invaderElement = this.el.nativeElement.querySelector(`.space-invader-${invader.id}`);
         this.renderer.setStyle(invaderElement, 'left', `${invader.x}%`);
         this.renderer.setStyle(invaderElement, 'top', `${invader.y}%`);
       });
 
-      // Mettre à jour la position du bouton No
+      // Update "No" button position
       const noButtonElement = this.el.nativeElement.querySelector('#no-button');
-      this.renderer.setStyle(noButtonElement, 'left', `${this.buttonNoX}px`);
-      this.renderer.setStyle(noButtonElement, 'top', `${this.buttonNoY}px`);
-
-
-      // Check if all invaders have reached their target
+      this.renderer.setStyle(noButtonElement, 'left', `calc(60% - 94px)`);
+      this.renderer.setStyle(noButtonElement, 'top', `${this.buttonNoYPercent}%`);
+  
+      // Keep invaders dancing if they have reached the target
       if (this.invaders.every(invader => invader.target === 2)) {
-        this.invaders.forEach(invader => invader.target = 2); // Keep in dance state
+        this.invaders.forEach(invader => invader.target = 2);
       }
 
       // Request a new animation frame
@@ -118,9 +131,9 @@ export class ChoiceBoxComponent implements OnInit {
   }
 
   /**
-   * Vérifie si tous les envahisseurs ont atteint leur cible spécifiée.
-   * @param target - La cible à vérifier.
-   * @returns true si tous les envahisseurs sont à la cible, sinon false.
+   * Checks if all invaders have reached a specified target.
+   * @param target - The target state to check for.
+   * @returns true if all invaders are at the target, false otherwise.
    */
   private allInvadersAtTarget(target: number): boolean {
     return this.invaders.every(invader => invader.target === target);
@@ -128,18 +141,16 @@ export class ChoiceBoxComponent implements OnInit {
 
   /**
    * Event handler for when the "Yes" button is clicked.
-   * Calculates the target positions for the invaders to move towards in an oval pattern.
+   * Calculates target positions for the invaders to move in an oval pattern around the button.
    */
   onYesClick(): void {
-    if (this.isButtonclicked) {return;}
-    
+    if (this.isButtonclicked) return;
+
     const yesButton = this.el.nativeElement.querySelector('#yes-button');
     const container = this.el.nativeElement.querySelector('.choice-container');
   
     const yesButtonRect = yesButton.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-
-    
 
     const deltaY = heightToDeltaY.find(([height]) => window.innerHeight >= height)?.[1] ?? 120;
     
@@ -152,13 +163,11 @@ export class ChoiceBoxComponent implements OnInit {
     const relativeCenterX = centerX - containerX;
     const relativeCenterY = centerY - containerY;
 
-    const radiusX =  140;
+    const radiusX = 140;
     const radiusY = 160;
   
     this.invaders.forEach((invader) => {
-      if (invader.target === 2) {
-        return;
-      }
+      if (invader.target === 2) return;
   
       const angleInRadians = invader.angle * (Math.PI / 180);
       const targetX = relativeCenterX + (radiusX * Math.cos(angleInRadians));
@@ -167,15 +176,19 @@ export class ChoiceBoxComponent implements OnInit {
       invader.targetX = targetX - (invader.width / 2);
       invader.targetY = targetY - (invader.height / 2);
   
-      invader.target = 1;
+      invader.target = 1; // Set target to move towards the "Yes" button
     });
-    this.isButtonclicked = true;
-    this.hideNoButtonGradually(); // Rendre le bouton invisible progressivement
-  }
-  
 
+    this.isButtonclicked = true;
+    this.hideNoButtonGradually(); // Gradually hide the "No" button
+  }
+
+  /**
+   * Event handler for when the "No" button is clicked.
+   * Moves invaders towards the "No" button to kidnap it.
+   */
   onNoClick(): void {
-    if (this.isButtonclicked) {return;}
+    if (this.isButtonclicked) return;
 
     const noButton = this.el.nativeElement.querySelector('#no-button');
     const container = this.el.nativeElement.querySelector('.choice-container');
@@ -198,9 +211,7 @@ export class ChoiceBoxComponent implements OnInit {
     const radiusY = 160;
     
     this.invaders.forEach((invader) => {
-      if (invader.target >= 3) {
-        return;
-      }
+      if (invader.target >= 3) return;
     
       const angleInRadians = invader.angle * (Math.PI / 180);
       const targetX = relativeCenterX + (radiusX * Math.cos(angleInRadians));
@@ -209,43 +220,49 @@ export class ChoiceBoxComponent implements OnInit {
       invader.targetX = targetX - (invader.width / 2);
       invader.targetY = targetY - (invader.height / 2);
     
-      invader.target = 3;
-  
-      // Calculer la nouvelle position du bouton No
-      this.buttonNoX = targetX; // Update the button's position
-      this.buttonNoY = targetY + 20; // You can adjust this value as needed
+      invader.target = 3; // Set target to kidnap the "No" button
     });
   }
-  
+
+  /**
+   * Sets the invader to kidnap the "No" button by moving it offscreen.
+   * @param invader - The invader that will kidnap the button.
+   */
   kidnapNoButton(invader: Invader): void {
-    // invader.targetX = window.innerWidth * 0.8;
-    invader.targetY = -100; 
-    invader.target = 5; 
+    invader.targetY = -150; // Move the "No" button offscreen
+    invader.target = 5; // Update target state
   }
 
+  /**
+   * Resets an invader to its initial position.
+   * @param invader - The invader to reset.
+   */
   gobackInit(invader: Invader): void {
     invader.targetX = invader.originalX;
     invader.targetY = invader.originalY;
-    invader.target = 7;
+    invader.target = 7; // Update target state
   }
 
+  /**
+   * Gradually hides the "No" button by decreasing its opacity over time.
+   */
   hideNoButtonGradually(): void {
-    const duration = 2000; // Durée de 2 secondes
-    const interval = 50; // Intervalle de temps en millisecondes
-    const decrement = interval / duration; // Calculer le changement d'opacité à chaque intervalle
+    const duration = 2000; // Duration of 2 seconds
+    const interval = 50; // Interval time in milliseconds
+    const decrement = interval / duration; // Calculate opacity change at each interval
     let opacity = this.noButtonOpacity;
   
     const fadeOut = setInterval(() => {
-      opacity -= decrement; // Diminuer l'opacité
+      opacity -= decrement; // Decrease opacity
       if (opacity <= 0) {
-        opacity = 0; // S'assurer que l'opacité ne soit pas inférieure à 0
-        clearInterval(fadeOut); // Arrêter l'intervalle lorsque l'opacité est à 0
+        opacity = 0; // Ensure opacity doesn't go below 0
+        clearInterval(fadeOut); // Stop interval when opacity reaches 0
       }
-      this.noButtonOpacity = opacity; // Appliquer la nouvelle opacité
+      this.noButtonOpacity = opacity; // Apply the new opacity
     }, interval);
-    this.noButtonCursor = 'default'; // Changer le curseur de la souris
-  }
 
+    this.noButtonCursor = 'default'; // Change mouse cursor
+  }
 
   /**
    * Lifecycle hook that is called just before the component is destroyed.
@@ -258,7 +275,7 @@ export class ChoiceBoxComponent implements OnInit {
   }
 }
 
-
+// Mapping of window height to delta Y offset for invader animation
 const heightToDeltaY: [number, number][] = [
   [2100, 1100],
   [2000, 1060],
@@ -267,15 +284,24 @@ const heightToDeltaY: [number, number][] = [
   [1700, 800],
   [1600, 760],
   [1500, 680],
+  [1450, 640],
   [1400, 600],
+  [1350, 570],
   [1300, 530],
+  [1250, 500],
   [1200, 480],
+  [1150, 440],
   [1100, 400],
+  [1050, 360],
   [1000, 330],
+  [950, 290],
   [900, 250],
+  [850, 210],
   [800, 180],
+  [750, 140],
   [700, 120],
+  [650, 80],
   [600, 50],
   [500, -40],
-  [0, 120]  // Valeur par défaut si aucune correspondance
+  [0, 120]  // Default value if no match
 ];
