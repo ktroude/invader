@@ -70,6 +70,9 @@ export class ChoiceBoxComponent implements OnInit {
       this.invaders.forEach((invader) => {
         switch (invader.target) {
           case 0:
+            if (this.isButtonclicked) {
+              this.isButtonclicked = false; // Reset button click flag
+            }
             invader.move(); // Normal movement
             break;
           case 1:
@@ -221,6 +224,7 @@ export class ChoiceBoxComponent implements OnInit {
       invader.targetY = targetY - (invader.height / 2);
     
       invader.target = 3; // Set target to kidnap the "No" button
+      this.isButtonclicked = true;
     });
   }
 
